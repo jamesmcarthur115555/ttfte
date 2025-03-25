@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATM FTE Calculator</title>
+    <style>
+        body {
+            font-family: 'Century Gothic', sans-serif;
+            background-color: ##D9D9D9;
+            color: #ecf0f1;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .phone-shape {
+            background-color: #000000;
+            width: 380px;
+            height: 750px;
+            border-radius: 40px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+            padding: 20px;
+            position: relative;
+        }
+        .phone-shape::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            width: 60px;
+            height: 6px;
+            background-color: #ecf0f1;
+            border-radius: 30px;
+            transform: translateX(-50%);
+        }
+        .container {
+            padding: 20px;
+            text-align: center;
+            background-color: #1c2833;
+            border-radius: 20px;
+            height: 100%;
+            overflow-y: auto;
+        }
+        h1 {
+            color: #ecf0f1;
+            font-size: 26px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+        h3 {
+            color: #ecf0f1;
+            font-size: 18px;
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        .slider-container {
+            margin-bottom: 25px;
+        }
+        .slider-container label {
+            color: #bdc3c7;
+            font-size: 16px;
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        .slider-container input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 10px;
+            background-color: #ecf0f1;
+            -webkit-appearance: none;
+            outline: none;
+            transition: background-color 0.3s ease;
+        }
+        .slider-container input[type="range"]:focus {
+            background-color: #bdc3c7;
+        }
+        .slider-container p {
+            font-size: 18px;
+            color: #ecf0f1;
+            margin-top: 5px;
+        }
+        .output-box {
+            font-size: 18px;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #1c2833;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .result-label {
+            font-weight: bold;
+            color: #ecf0f1;
+            font-size: 16px;
+        }
+        .result-value {
+            font-size: 18px;
+            font-weight: normal;
+            color: #f39c12;
+        }
+        .btn {
+            background-color: #f39c12;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #e67e22;
+        }
+    </style>
+    <script>
+        function calculateFTE() {
+            let capeTown1 = parseInt(document.getElementById("capeTown1Slider").value);
+            let capeTown2 = parseInt(document.getElementById("capeTown2Slider").value);
+            let durban = parseInt(document.getElementById("durbanSlider").value);
+            let totalFTE = Math.min(1830, capeTown1 + capeTown2 + durban);
+
+            let universalAgentsFTE = totalFTE * 0.75;
+            let siloRetentionsFTE = totalFTE * 0.22;
+            let siloAcqFTE = totalFTE * 0.02;
+            let siloEscalationsFTE = totalFTE * 0.02;
+
+            let totalPODs = Math.floor(totalFTE / 15);
+            let universalAgentPODs = Math.floor(universalAgentsFTE / 15);
+            let supportingPODs = totalPODs - universalAgentPODs;
+
+            // Display values
+            document.getElementById("fteValue").innerText = totalFTE;
+            document.getElementById("universalFTE").innerText = universalAgentsFTE.toFixed(2);
+            document.getElementById("siloRetentionsFTE").innerText = siloRetentionsFTE.toFixed(2);
+            document.getElementById("siloAcqFTE").innerText = siloAcqFTE.toFixed(2);
+            document.getElementById("siloEscalationsFTE").innerText = siloEscalationsFTE.toFixed(2);
+            document.getElementById("universalAgentPODs").innerText = universalAgentPODs;
+            document.getElementById("supportingPODs").innerText = supportingPODs;
+            document.getElementById("totalPODs").innerText = totalPODs;
+        }
+    </script>
+</head>
+<body>
+    <div class="phone-shape">
+        <div class="container">
+            <h1>FTE Calculator</h1>
+            <div class="slider-container">
+                <label>Cape Town 1 (Max 665):</label>
+                <input type="range" id="capeTown1Slider" min="240" max="665" value="240" step="1" oninput="calculateFTE()">
+                <p>FTE: <span id="capeTown1Value">240</span></p>
+
+                <label>Cape Town 2 (Max 665):</label>
+                <input type="range" id="capeTown2Slider" min="240" max="665" value="240" step="1" oninput="calculateFTE()">
+                <p>FTE: <span id="capeTown2Value">240</span></p>
+
+                <label>Durban (Max 500):</label>
+                <input type="range" id="durbanSlider" min="150" max="500" value="150" step="1" oninput="calculateFTE()">
+                <p>FTE: <span id="durbanValue">150</span></p>
+            </div>
+
+            <h3>
+            <div class="output-box">
+                <p><span class="result-label">Total FTE:</span> <span class="result-value" id="fteValue">630</span></p>
+                <p><span class="result-label">Universal Agent FTE:</span> <span class="result-value" id="universalFTE">472.50</span></p>
+                <p><span class="result-label">Silo Retention FTE:</span> <span class="result-value" id="siloRetentionsFTE">138.60</span></p>
+                <p><span class="result-label">Silo Acquisition FTE:</span> <span class="result-value" id="siloAcqFTE">12.60</span></p>
+                <p><span class="result-label">Silo Escalation FTE:</span> <span class="result-value" id="siloEscalationsFTE">12.60</span></p>
+
+                <h3>POD ALLOCATION</h3>
+                <p><span class="result-label">Universal Agent PODs:</span> <span class="result-value" id="universalAgentPODs">42</span></p>
+                <p><span class="result-label">Supporting PODs:</span> <span class="result-value" id="supportingPODs">0</span></p>
+                <p><span class="result-label">Total PODs:</span> <span class="result-value" id="totalPODs">42</span></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        calculateFTE();
+    </script>
+</body>
+</html>
